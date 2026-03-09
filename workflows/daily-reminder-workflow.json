@@ -1,0 +1,153 @@
+{
+  "name": "daily-reminder-workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "duldominguez1@gmail.com",
+        "subject": "Recordatorio de tarea",
+        "message": "=Vence hoy:  {{ $json.Nombre }}{{ $json.Prioridad }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        176
+      ],
+      "id": "874abc27-1217-4d92-bc4b-0366ccf12df3",
+      "name": "enviar_recordatorio",
+      "webhookId": "0c58744a-065c-4621-af1e-3de6695dd586",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "FdLwYr9YDxP0NiGT",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.filter(item => {\n  const hoy = new Date().toISOString().slice(0,10);\n  return item.json[\"Fecha\"] === hoy;\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        176
+      ],
+      "id": "7616d917-e788-46b8-8e67-3cfea8be377e",
+      "name": "tareas_de_hoy"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            },
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -320,
+        176
+      ],
+      "id": "a326eeb2-6295-408b-a1ea-d7d64c92b4e8",
+      "name": "alarma_recordatorio"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ZgfSu1c57Jc1uddbx75s0Hq-Wd6eEwf9gvWg87LFVpo",
+          "mode": "list",
+          "cachedResultName": "tasks",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZgfSu1c57Jc1uddbx75s0Hq-Wd6eEwf9gvWg87LFVpo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZgfSu1c57Jc1uddbx75s0Hq-Wd6eEwf9gvWg87LFVpo/edit#gid=0"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A:E"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        176
+      ],
+      "id": "17b59b83-30dc-4172-9fa4-46c850113f1f",
+      "name": "leer_hoy",
+      "alwaysOutputData": false,
+      "retryOnFail": false,
+      "executeOnce": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SJiWQ2Zeyl4Qdzlr",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "tareas_de_hoy": {
+      "main": [
+        [
+          {
+            "node": "enviar_recordatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "alarma_recordatorio": {
+      "main": [
+        [
+          {
+            "node": "leer_hoy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "leer_hoy": {
+      "main": [
+        [
+          {
+            "node": "tareas_de_hoy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "dd4c2861-384f-4dc9-a7ef-bbd700fecbff",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d17bb4d4b0119426d8b0448d45665521ef4e029eb53371f2f5e04ea8a0019bd3"
+  },
+  "id": "DQDg4pMVGt8qntWD",
+  "tags": []
+}

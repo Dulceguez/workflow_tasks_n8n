@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Nueva Tarea</title>
+  
+
+  <style>
+    h1 { font-family:Arial, sans-serif; text-align: center; color: #696969 }
+    body { font-family: Arial, sans-serif; background: #f0f2f5; }
+    form { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin: 50px auto; }
+    input, select { width: 100%; padding: 8px; margin: 5px 0 15px; border-radius: 4px; border: 1px solid #ccc; }
+    button { background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background-color: #45a049; }
+  </style>
+</head>
+
+<body>
+    <h1>Ingresar Nueva Tarea</h1>
+
+    <form action="https://dulcedominguez1.app.n8n.cloud/webhook-test/nueva-tarea" method="POST">
+    
+        <label for="task_name">Nueva tarea:</label>
+        <input type="text" id="task_name" name="task_name" required><br><br>
+
+        <label for="duration">Duracion:</label>
+        <input type="text" id="duration" name="duration" required><br><br>
+
+        <label for="date">Fecha:</label>
+        <input type="date" id="date" name="date" required><br><br>
+
+        <label for="category">Categoria:</label>
+        <select id="category" name="category" required>
+            <option value="Estudio">Estudio</option>
+            <option value="Trabajo">Trabajo</option>
+            <option value="Personal">Personal</option>
+        </select><br><br>
+
+        <label for="priority">Prioridad:</label>
+        <select id="priority" name="priority" required>
+            <option value="Baja">Baja</option>
+            <option value="Media">Media</option>
+            <option value="Alta">Alta</option>
+        </select>
+    
+        <button type="submit">Enviar</button>
+    
+    </form>

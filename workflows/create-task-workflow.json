@@ -1,0 +1,309 @@
+{
+  "name": "create-task-workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "duldominguez1@gmail.com",
+        "subject": "=Nueva tarea creada",
+        "message": "=Nueva tarea creada:  {{ $json.Nombre }} <br>\nFecha: {{ $json.Fecha }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        768,
+        160
+      ],
+      "id": "58973f6d-6b9b-46cd-822d-85430187386b",
+      "name": "enviar_nueva_tarea",
+      "webhookId": "75050608-ec19-48a1-a5b6-f208a44be620",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "FdLwYr9YDxP0NiGT",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json.body;\nconst priority = data.priority;\nlet emoji =\"\";\n\nif (priority === \"Alta\") emoji=\"🔴\";\nelse if (priority === \"Media\") emoji=\"🟠\";\nelse emoji=\"🟢\";\n\n// Devolver todo el JSON para el siguiente nodo (Sheets, Gmail, etc.)\nreturn [\n  {\n    json: {\n      ...data,\n      emoji: emoji,\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        304,
+        160
+      ],
+      "id": "6383b696-1f1a-47d1-a10e-68ea30a9b24e",
+      "name": "convsersion_prioridad_emoji"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nueva-tarea",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        48,
+        160
+      ],
+      "id": "22216a08-2138-4d12-8051-dc612b82c34f",
+      "name": "interfaz_nueva_tarea",
+      "webhookId": "5250832c-8a48-415e-81de-bd165e2508cb"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZgfSu1c57Jc1uddbx75s0Hq-Wd6eEwf9gvWg87LFVpo",
+          "mode": "list",
+          "cachedResultName": "tasks",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZgfSu1c57Jc1uddbx75s0Hq-Wd6eEwf9gvWg87LFVpo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZgfSu1c57Jc1uddbx75s0Hq-Wd6eEwf9gvWg87LFVpo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $json.task_name }}",
+            "Duracion": "={{ $json.duration }}",
+            "Fecha": "={{ $json.date }}",
+            "Prioridad": "={{ $json.emoji }}",
+            "Categoria": "={{ $json.category }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Duracion",
+              "displayName": "Duracion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Categoria",
+              "displayName": "Categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prioridad",
+              "displayName": "Prioridad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Readable date",
+              "displayName": "Readable date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Readable time",
+              "displayName": "Readable time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Day of week",
+              "displayName": "Day of week",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Year",
+              "displayName": "Year",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Month",
+              "displayName": "Month",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Day of month",
+              "displayName": "Day of month",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hour",
+              "displayName": "Hour",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Minute",
+              "displayName": "Minute",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Second",
+              "displayName": "Second",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Timezone",
+              "displayName": "Timezone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        496,
+        160
+      ],
+      "id": "fb27b184-0c02-4f9a-8b5d-5f885b72836a",
+      "name": "tareas",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SJiWQ2Zeyl4Qdzlr",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "convsersion_prioridad_emoji": {
+      "main": [
+        [
+          {
+            "node": "tareas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "interfaz_nueva_tarea": {
+      "main": [
+        [
+          {
+            "node": "convsersion_prioridad_emoji",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tareas": {
+      "main": [
+        [
+          {
+            "node": "enviar_nueva_tarea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d020bb36-cc84-4bff-bd5f-f2113d8ab614",
+  "meta": {
+    "instanceId": "d17bb4d4b0119426d8b0448d45665521ef4e029eb53371f2f5e04ea8a0019bd3"
+  },
+  "id": "mF2wtcG8IIhQ0cmZ",
+  "tags": []
+}
